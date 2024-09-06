@@ -45,11 +45,10 @@ def index():
         else:
             data = "Error: Unable to fetch weather data for this location. Please check the location name and try again."
         
-        # Redirect to the home page with data to refresh the form
-        return redirect(url_for('index'))
+        # Render the template directly without redirecting
+        return render_template('index.html', data=data)
 
-    # Render the HTML template and pass the data variable
+    # Render the HTML template with data (for the GET request)
     return render_template('index.html', data=data)
-
 if __name__ == '__main__':
     app.run(debug=True)

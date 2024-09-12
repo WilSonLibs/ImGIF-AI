@@ -1,24 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Location Form</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2b2b2b;
+      color: white;
+      text-align: center;
+    }
+
+    .container {
+      /* margin-top: 50px; */
+      padding: 20px;
+      background-color: #333;
+      border-radius: 10px;
+      display: inline-block;
+      width: "100%";
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+
+    input[type="submit"] {
+      padding: 15px 30px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    img {
+      width: 60%;
+      height: 600px;
+      margin: 10px 0;
+    }
+
+    .bg-containers {
+      background-image: url("{{ image_urls[0] }}");
+      /* Replace with the actual image URL */
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      /* background-attachment: fixed; */
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      /* Sets the height to full viewport */
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .shadoow {
+      background-color: rgba(0, 0, 0, 0.3);
+      width: 50%;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      font-size: 16px;
+      /* Font size */
+      line-height: 1.6;
+      /* Space between lines */
+      letter-spacing: 0.03em;
+      /* Space between letters */
+      word-spacing: 0.05em;
+      /* Space between words */
+      margin: 0 auto;
+      /* Centers the paragraph */
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .headddingg{
+      margin-top: 70;
+      display: block;
+    }
+
+    audio {
+      opacity: 0;
+    }
+
+    .mypara {
+      text-align: justify;
+      width: 80%;
+      margin-top: -50;
+    }
+
+    .flex-display {
+      display: flex;
+      gap: 10;
+      /* align-items: center; */
+      /* justify-content: center; */
+    }
+  </style>
 </head>
+
 <body>
-<div class ="box">
-    <div class="form-container">
-        <form method="POST" action="/">
-            <h2>Enter Your Area Location</h2>
-            
-            <label for="location">Area Location:</label>
-            <input type="text" id="location" name="location" required>
-            
-            <button type="submit">Submit</button>
-        </form>
+  <div class="container">
+    <h2>Kindly Enter the Country or the City Name</h2>
+    <form method="post">
+      <input type="text" name="location" placeholder="Enter city or country" required />
+      <input type="submit" value="Get Weather" />
+    </form>
+
+    {% if data %}
+    <div>
+      <div class="flex-display">
+        <!-- <div class="bg-containers"> -->
+        <div class="shadoow">
+          <h3>
+            The Temprature in
+            <strong style="color: #4caf50">{{ location }}</strong> is
+            <strong style="color: #4caf50">{{ temp }}°C</strong>
+          </h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, auto); gap: 10px; ">
+  <p>
+    <strong style="color: #4caf50">Precipitation:</strong> {{ precipitation }} mm
+  </p>
+  <p>
+    <strong style="color: #4caf50">Humidity:</strong> {{ humidity }}%
+  </p>
+  <p>
+    <strong style="color: #4caf50">Wind:</strong> {{ wind_speed }} km/h
+  </p>
+  <p>
+    <strong style="color: #4caf50">Condition:</strong> {{ weather_description }}
+  </p>
+</div>
+
+          <h1 class="headddingg"><strong style="color: #4caf50">Suggestions</strong></h1>
+          <p class="mypara">{{ suggestions }}</p>
+        </div>
+        <img id="locationImage" src="{{ image_urls[0] }}" alt="Image of {{ location }}" />
+      </div>
     </div>
-    <div class ="form-container"> {{ data }}</div>
-    </div>
+    <!-- </div> -->
+  </div>
+  {% if suggestions %} {% endif %} {% if tts_audio %}
+  <audio id="ttsAudio" controls>
+    <source src="data:audio/mpeg;base64,{{ tts_audio }}" type="audio/mpeg" />
+    Your browser does not support the audio tag.
+  </audio>
+  {% endif %} {% else %}
+  <p>{{ data }}</p>
+  {% endif %}
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const ttsAudio = document.getElementById("ttsAudio");
+
+      if (ttsAudio) {
+        // Wait for the page to fully load and then delay the audio playback for 1 second
+        window.onload = function () {
+          setTimeout(function () {
+            ttsAudio.play().catch(function (error) {
+              console.error("Error playing audio:", error);
+            });
+          }, 1000);
+        };
+      }
+    });
+  </script>
 </body>
+
 </html>
